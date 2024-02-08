@@ -1,14 +1,26 @@
 from flask import Flask
 from infobip_channels.sms.channel import SMSChannel
+from jokeapi import Jokes
 
 import os
+import asyncio
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    
     return "<p>hello world</p>"
+
+async def get_joke_from_api():
+    jokes = await Jokes()
+    joke = await jokes.get_joke(category=['programming', 'pun'])
+    if joke["type"] == "single": # Print the joke
+        joke = joke["joke"]
+    else:
+        joke = f'{joke["setup"]}\n\n{joke["delivery"]}'
+    return joke
+
+
 
 def send_sms_from_app(text):
     channel = SMSChannel.from_env()
