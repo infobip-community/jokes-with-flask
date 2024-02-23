@@ -20,7 +20,7 @@ def index():
 async def get_joke_from_api():
     jokes = await Jokes()
     joke = await jokes.get_joke(category=['programming', 'pun'], blacklist=['nsfw'])
-    if joke["type"] == "single": # Print the joke
+    if joke["type"] == "single":
         joke = joke["joke"]
     else:
         joke = f'{joke["setup"]}\n\n{joke["delivery"]}'
