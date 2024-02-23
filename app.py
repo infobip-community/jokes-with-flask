@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from infobip_channels.sms.channel import SMSChannel
 from jokeapi import Jokes
 
@@ -7,8 +7,14 @@ import asyncio
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == 'GET':
+        pass
+    else:
+        send_sms_from_app(
+            asyncio.run(get_joke_from_api())
+        )
     return render_template('app.html')
 
 async def get_joke_from_api():
@@ -25,7 +31,8 @@ def send_sms_from_app(text):
     channel = SMSChannel.from_env()
     sms_response = channel.send_sms_message({
         'messages': [{
-            'text': 'This text came from your Flask app!',
+            'from': 'PythonPuns',
+            'text': text,
             'destinations': [{
                 'to': os.environ['DESTINATION_NUMBER']
             }],
