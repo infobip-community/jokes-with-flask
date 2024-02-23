@@ -12,9 +12,8 @@ def index():
     if request.method == 'GET':
         pass
     else:
-        send_sms_from_app(
-            asyncio.run(get_joke_from_api())
-        )
+        joke = asyncio.run(get_joke_from_api())
+        send_sms_from_app(joke)
     return render_template('app.html')
 
 async def get_joke_from_api():
